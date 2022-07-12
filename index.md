@@ -1,5 +1,5 @@
 # A foreword to this blog
-Dear readers (probably only me), I guess it would be rude to start off this blog without introducing myself at least a bit. I am studying master's program on *Information Security* and have been dealing with security and hacking for 3 years. I am also [OSCP (Offensive Security Certified Professional)](https://www.offensive-security.com/pwk-oscp/) certified and have developed passion for binary exploitation, malware development and antivirus evasion.
+I guess it would be rude to start off this blog without introducing myself at least a bit. I am studying master's program on *Information Security* and have been dealing with security and hacking for 3 years. I am also [OSCP (Offensive Security Certified Professional)](https://www.offensive-security.com/pwk-oscp/) certified and have developed passion for binary exploitation, malware development and antivirus evasion.
 
 That is why we are here. I promised myself that it will not be just deeply technical, nerdy stuff. But that I would share my knowledge of cyber threats on the internet and demonstrate how you, dear readers, can protect yourself and not "get hacked". However, you will find pretty nerdy stuff here, like a lot. Since it was not so easy to start, let me explain why have I decided not to do it and then why I decided to do it.
 
