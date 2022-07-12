@@ -12,7 +12,7 @@ After almost a year of thinking about writing this blog I have caught myself in 
 
 **1\. Self-doubt**
 
-In a way I consider myself a perfectionist, very seldomly satisfied by the output of my work, no matter how daunting or painful it was to accomplish. This creates a bit of a psychological barrier for me and have always kept me wondering whether the content I would post here would be interesting and engaging enough for the people who might stumble upon it. Quality of the content was a big concern for me as well and I simply did not feel ready.
+In a way I consider myself a perfectionist, very seldom satisfied by the output of my work, no matter how daunting or painful it was to accomplish. This creates a bit of a psychological barrier for me and have always kept me wondering whether the content I would post here would be interesting and engaging enough for the people who might stumble upon it. Quality of the content was a big concern for me as well and I simply did not feel ready.
 
 Nevertheless, I changed my mind after hearing now one of my favorite quotes: "*Take one step into the right direction and you are halfway there to make your dreams come true.*". I admit it sounds a bit cheesy and writing a blog is surely not a lifelong dream of mine. However, it made me realize the importance of the first step towards any goal in life. That is why you are now reading this page. The concerns and *self-doubt* were suppressed by this quote as well. I simply realized that without writing this blog I would never feel ready to write this blog and would keep pushing it away for long enough that I would *never* do it.
 
