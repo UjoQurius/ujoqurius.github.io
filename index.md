@@ -32,7 +32,7 @@ I am also doing it for myself: To keep my memory fresh, to deepen my knowledge a
 <br>
 
 ## What can you find here
-We have some formalities and touching story of me starting this blog behind us, let's discuss what you will find here. Serious stuff coming. Since I am interested in so many things I had to narrow the areas of interest to these 3 categories (for now):
+We have some formalities and touching story of me starting this blog behind us, let's discuss what you will find here. Serious stuff coming. Since I am interested in so many things I had to narrow the areas of interest down to these 3 categories (for now):
 
 1. [Malware development](MalwareDevelopment/index)
 2. [HackTheBox machines' writeups](HTB/index)
@@ -40,7 +40,7 @@ We have some formalities and touching story of me starting this blog behind us, 
 
 <br>
 
-If you made it this far, congratulations! There is a high probability that you are the only one who did so. Do not be surprised when you click on these links and find that there is nothing in there. As I mentioned above this is the *first step* towards building this blog and first blogposts on aforementioned areas of interest will be coming out in a near future.
+If you made it this far, congratulations! There is a high probability that you are the only one who did so. Do not be surprised when you click on these links and find out that there is nothing in there. As I mentioned above this is the *first step* towards building this blog and first blogposts on aforementioned areas of interest will be coming out in a near future.
 
 If you want to be updated with blogposts coming out, follow me on Instagram [here](https://www.instagram.com/patrikpis/).
 
