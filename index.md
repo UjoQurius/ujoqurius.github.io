@@ -1,5 +1,5 @@
 # A foreword to this blog
-I guess it would be rude to start off this blog without introducing myself at least a bit. I am studying master's program on *Information Security* and have been dealing with security and hacking for 3 years. I am also [OSCP (Offensive Security Certified Professional)](https://www.offensive-security.com/pwk-oscp/) certified and have developed passion for binary exploitation, malware development and antivirus evasion.
+I guess it would be rude to start off this blog without introducing myself at least a bit. I am studying master's program on *Information Security* and have been dealing with security and hacking for 3 years. I am also [OSCP (Offensive Security Certified Professional)](https://www.offensive-security.com/pwk-oscp/) certified and have developed passion for binary exploitation, malware development and reverse engineering.
 
 That is why we are here. I promised myself that it will not be just deeply technical, nerdy stuff. But that I would share my knowledge of cyber threats on the internet and demonstrate how you, dear readers, can protect yourself and not "get hacked". However, you will find pretty nerdy stuff here, like a lot. Since it was not so easy to start, let me explain why have I decided not to do it and then why I decided to do it.
 
@@ -35,7 +35,7 @@ I am also doing it for myself: To keep my memory fresh, to deepen my knowledge a
 We have some formalities and touching story of me starting this blog behind us, let's discuss what you will find here. Serious stuff coming. Since I am interested in so many things I had to narrow the areas of interest down to these 3 categories (for now):
 
 1. [Malware development](MalwareDevelopment/index)
-2. [HackTheBox machines' writeups](HTB/index)
+2. [Windows digital forensic analysis](windows-forensics/index)
 3. [Phishing awareness and how you can protect yourself online](protect-yourself-online/index)
 
 <br>
