@@ -35,7 +35,7 @@ I am also doing it for myself: To keep my memory fresh, to deepen my knowledge a
 We have some formalities and touching story of me starting this blog behind us, let's discuss what you will find here. Serious stuff coming. Since I am interested in so many things I had to narrow the areas of interest down to these 3 categories (for now):
 
 1. [Malware development](malware-development/)
-2. [Windows digital forensic analysis](windows-forensics/)
+2. [HackTheBox machines' writeups](htb/)
 3. [Phishing awareness and how you can protect yourself online](protect-yourself-online/)
 
 <br>
