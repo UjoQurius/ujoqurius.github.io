@@ -42,7 +42,7 @@ We have some formalities and touching story of me starting this blog behind us, 
 
 If you made it this far, congratulations! There is a high probability that you are the only one who did so. Do not be surprised when you click on these links and find out that there is nothing in there. As I mentioned above this is the *first step* towards building this blog and first blogposts on aforementioned areas of interest will be coming out in a near future.
 
-If you want to be updated with blogposts coming out, follow me on Instagram [here](https://www.instagram.com/patrikpis/).
+If you want to be updated with blogposts coming out, follow me on Twitter [here](https://twitter.com/_qurius).
 
 ```text
    __               _                        _               
