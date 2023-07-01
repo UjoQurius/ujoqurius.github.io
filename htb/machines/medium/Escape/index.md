@@ -289,7 +289,7 @@ WINRM       sequel.htb      5985   DC               [+] sequel.htb\sql_svc:REGGI
 
 ## Shell as sql_svc
 
-We confirme that we indeed can log in via `WINRM` as user `sql_svc`. Let's use `evil-winrm` to get a shell.
+We confirmed that we indeed can log in via `WINRM` as user `sql_svc`. Let's use `evil-winrm` to get a shell.
 
 ```bash
 ➜  Escape evil-winrm -i sequel.htb -u sql_svc -p REGGIE1234ronnie
