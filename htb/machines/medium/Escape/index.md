@@ -745,4 +745,4 @@ C:\Windows\system32>
 
 ## Final thoughts
 
-This was a very fun box. I always like when there are Windows machines on HackTheBox, because, frankly, they are always a bit our of my comfort zone. I really hope you liked my writeup for this machine and I'll see you in the next one. Thanks!
+This was a very fun box. I always like when there are Windows machines on HackTheBox, because, frankly, they are always a bit out of my comfort zone. I really hope you liked my writeup for this machine and I'll see you in the next one. Thanks!
