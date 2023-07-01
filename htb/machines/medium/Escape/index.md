@@ -1,6 +1,6 @@
 Navigation:
 
-|[Home](/) | [Machine writeups](/htb/)|
+[Home](/) \| [Machine writeups](/htb/)
 
 # HTB: Escape
 
