@@ -191,11 +191,11 @@ Modify Date                     : 2022:11:18 13:39:43+00:00
 
 Unfortunatelly, this did not yield any interesting results other than that the creator of the box probably uses `Obsidian` for their notes. Let's take a closer look at the contents of the PDF.
 
-![[Pasted image 20230616092902.png]]
+![](/assets/Escape-SQL1.png)
 
 Well, it looks like there is just a "mock" instance of the database on the DC and that it will be removed when `Tom` comes back from the vacation. On the second page of the PDf we even get credentials that allow us to log in to the `MSSQL`. If we're lucky, Tom is not back from the vacation yet and we can log in to the database.
 
-![[Pasted image 20230616092919.png]]
+![](/assets/Escape-SQL2.png)
 
 We can use `Impacket MSSQL Client` to connect to the database.
 
