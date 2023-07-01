@@ -1,3 +1,5 @@
+[home](/) | [Machine writeups](/htb/)
+
 # HTB: Escape
 
 Hello, it's qurius! Welcome to my first blog post ever. Today we are taking a look at the `Escape` machine from [HackTheBox](https://www.hackthebox.com/). It was a medium difficulty machine which involved stealing of NTLM hashes and abusing AD CS certificate templates. This one was on the easier side of medium machines spectrum in my opinion (if you're familiar with Active Directory exploitation). Nonetheless, it was fun and I really enjoyed it, let's take a look.
