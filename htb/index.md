@@ -1,4 +1,4 @@
-[Home](/index)
+[Home](/)
 
 # Machine writeups
 
