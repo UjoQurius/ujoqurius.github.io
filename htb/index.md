@@ -1,3 +1,5 @@
+[Home](/index)
+
 # Machine writeups
 
 ## [HTB: Escape](machines/medium/Escape/)
