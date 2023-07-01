@@ -1,5 +1,5 @@
-|Navigate||
-|---|---|
+Navigation:
+
 |[Home](/) | [Machine writeups](/htb/)|
 
 # HTB: Escape
