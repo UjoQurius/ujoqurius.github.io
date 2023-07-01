@@ -1,4 +1,6 @@
-[home](/) [Machine writeups](/htb/)
+|Navigate||
+|---|---|
+|[Home](/) | [Machine writeups](/htb/)|
 
 # HTB: Escape
 
