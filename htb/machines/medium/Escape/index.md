@@ -1,4 +1,4 @@
-[Home](/) \| [Writeups](/htb/)
+[Home](/) \| [Writeups](/writeups/)
 
 # HTB: Escape
 
