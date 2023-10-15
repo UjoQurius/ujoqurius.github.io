@@ -1,3 +1,3 @@
-[Home](/) \| [Machine writeups](/writeups/)
+[Home](/) \| [Writeups](/writeups/)
 
 Comming soon...
