@@ -1,0 +1,3 @@
+[Home](/) \| [Machine writeups](/writeups/)
+
+Comming soon...

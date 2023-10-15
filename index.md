@@ -8,4 +8,4 @@ I decided that starting this blog will help me to stay consistent with studying 
 
 For now, the only blog posts here will be writeups for retired [HTB](https://www.hackthebox.com/) machines and perhaps some interesting challenges. Later, we might dig into some Active Directory stuff and malware development, but let's just start small.
 
-[HackTheBox writeups](htb/)
+[HackTheBox writeups](writeups/)
