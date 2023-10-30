@@ -6,7 +6,7 @@ Retro is a easy machine on [Vulnlab](https://www.vulnlab.com/). It involves some
 
 ## Nmap
 
-As with every machine, let's start with a Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
+As with every machine, let's start with an Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
 
 ```bash
 Nmap scan report for 10.10.106.112
