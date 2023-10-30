@@ -4,11 +4,9 @@
 
 <br>
 
-## [Vulnlab: Baby](../vulnlab/machines/Baby/)
+## [Vulnlab: Retro](../vulnlab/machines/Retro/)
 
-Coming soon...
-
-[Baby](../vulnlab/machines/Baby/) is a easy difficulty machine which involved LDAP misconfigurations, password spraying and exploiting `SeBackupPrivilege` for privilege escalation.
+[Baby](../vulnlab/machines/Retro/)is a easy machine on [Vulnlab](https://www.vulnlab.com/). It involves some password guessing, provides a interesting insight into pre-created domain computer accounts and how to abuse them and ends with a ESC1 Active Directory Certificate Services abuse.
 
 <br>
 

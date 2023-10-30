@@ -1,0 +1,1 @@
+[[Reading & Writing/Blog/qur1us.github.io/index|Home]]
