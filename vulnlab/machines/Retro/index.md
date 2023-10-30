@@ -4,6 +4,8 @@
 
 Retro is a easy machine on [Vulnlab](https://www.vulnlab.com/). It involves some password guessing, provides a interesting insight into pre-created domain computer accounts and how to abuse them and ends with a ESC1 Active Directory Certificate Services abuse.
 
+![](https://1897091482-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FI3I73FFqB6GvT8N5Mt1N%2Fuploads%2FwPPiA9QkeYWlDNRWWT2l%2Fretro_slide.png?alt=media&token=7fa3c610-34d9-45ab-925c-b72880dc4420)
+
 ## Nmap
 
 As with every machine, let's start with an Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
