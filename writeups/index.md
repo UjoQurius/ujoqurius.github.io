@@ -12,4 +12,4 @@
 
 ## [HTB: Escape](../htb/machines/Escape/)
 
-[Escape](machines/Escape/) is a medium difficulty machine which involved stealing of NTLM hashes and abusing AD CS certificate templates.
+[Escape](../htb/machines/Escape/) is a medium difficulty machine which involved stealing of NTLM hashes and abusing AD CS certificate templates.
