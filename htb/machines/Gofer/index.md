@@ -103,10 +103,10 @@ PS: Last thing for Tom; I know you're working on our web proxy but if you could 
 ```
 
 The e-mail is packed with quite Important things:
-- Jocelyn tends to recklessly click on links
-- They send their e-mails only Internally
-- They use LibreOffice (.odt)
-- Tom works on a proxy that is secured via `<Limit>`
+1. Jocelyn tends to recklessly click on links
+2. They send their e-mails only Internally
+3. They use LibreOffice (.odt)
+4. Tom works on a proxy that is secured via `<Limit>`
 
 That's a lot of useful information for us. We can slowly start to see the attack path that lies before us. For now, let's continue with enumerating HTTP. Keep in mind that we are looking for a proxy that is secured with `<Limit>`.
 
@@ -216,10 +216,10 @@ We can see that we triggered a Server-side Request Forgery (SSRF) vulnerability!
 ## Let's go phishing! (Part 1)
 
 What do we have?
-- User Jocelyn who tends to recklessly click on links
-- The company sends their e-mails only Internally (port 25 behind firewall)
-- They use LibreOffice (.odt)
-- Server-side Request Forgery (SSRF) vulnerability
+1. User Jocelyn who tends to recklessly click on links
+2. The company sends their e-mails only Internally (port 25 behind firewall)
+3. They use LibreOffice (.odt)
+4. Server-side Request Forgery (SSRF) vulnerability
 
 What we can do next is to try to use `gopher` protocol to send malicious phishing e-mail to Jocelyn via the SSRF vulnerability! Well, as the heading says, Let's go phishing!
 
