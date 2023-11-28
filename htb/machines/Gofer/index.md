@@ -303,7 +303,7 @@ Here's what we are going to do:
 3. Send phishing email with link to download a malicious ODT file: `http://<ATTACKER IP>/output.odt`
 4. Wait
 
-Step 1
+#### Step 1
 
 The macros are written in Visual Basic. The following snippet will execute a shell command specified in the `sCmd` variable.
 
@@ -325,7 +325,7 @@ After the macro was created, we had to configure the document to auto run the ma
 
 ![](../../../assets/Gofer-PHISH2.png)
 
-Steps 2 & 3
+#### Steps 2 & 3
 
 To execute the payload we can again execute our SSRF > Gopher chain using curl.
 
