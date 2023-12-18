@@ -2,6 +2,10 @@
 
 # Writeups
 
+## [Vulnlab: Forgotten](../vulnlab/machines/forgotten/)
+
+[Vulnlab: Forgotten](../vulnlab/machines/forgotten/) is a easy (junior) level machine on [Vulnlab](https://www.vulnlab.com/) involving exploitation of a forgotten web installer of `LimeSurvey` survey application. After successful installation, the `LimeSurvey` allowed us to upload a malicious PHP plugin and we were able to get Remote Code Execution landing in docker instance. The box ends with a very nice way of leveraging root access to a docker instance and shared folder with the host for privilege escalation.
+
 <br>
 
 ## [HTB: Gofer (Part 1)](../htb/machines/Gofer/)
