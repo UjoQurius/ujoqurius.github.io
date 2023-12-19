@@ -300,7 +300,7 @@ Nice, we have a privilege escalation vector here.
 
 ## Getting root
 
-From the post-exploitation enumeration above, we identified a potential privilege escalation vector. We have a write access as root in docker to a shared folder with a host. What we can do here is to create a SUID binary. There is a famous way to exploit this by copying a `/bin/bash` to the folder, modifying it to be owned by root and giving it a SUID bits. However, this does never works on Debian (at least in my experience), because Debian seems to drop SUID privileges off the `bash` or `sh` commands. We'll do something different.
+From the post-exploitation enumeration above, we identified a potential privilege escalation vector. We have a write access as root in docker to a shared folder with a host. What we can do here is to create a SUID binary. There is a famous way to exploit this by copying a `/bin/bash` to the folder, modifying it to be owned by root and giving it a SUID bits. However, we'll do something different.
 
 What we can do is to write a small C binary that will attempt to write a public SSH key into the root's `autorized_keys` file.
 
