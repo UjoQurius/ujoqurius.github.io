@@ -1,6 +1,6 @@
 ![](./assets/curious_fox_bw.png)
 
-[Writeups](writeups/)
+[Writeups](writeups/) | [HTB](https://app.hackthebox.com/profile/223060) | [LinkedIn](https://www.linkedin.com/in/patrik-pis/)
 
 ## About me
 
