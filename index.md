@@ -1,5 +1,7 @@
 # Home
 
+![](./assets/curious_fox_bw.png)
+
 ## About me
 
 Hi, it's *qurius* and to briefly introduce myself I must say that I am just curious about how things work and love to dig deep when I don't understand. I am studying master's program on *Information Security* and have been dealing with security and hacking for about 4 years. In 2022 I got my [OSCP](https://www.offsec.com/courses/pen-200/) certification and while I am studying I work as a freelance penetration tester and do some research work at the university.
