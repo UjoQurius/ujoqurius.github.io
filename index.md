@@ -1,5 +1,3 @@
-# Home
-
 ![](./assets/curious_fox_bw.png)
 
 ## About me
