@@ -23,18 +23,25 @@ p img {
 code {
     font-family: Monaco,Consolas,"Lucida Console",monospace;
     color: #eff;
-    background-color: #2e3440;
+    background-color: #434c5e;
 }
 
 .language-plaintext.highlighter-rouge {
-    color: #2e3440;
-    background-color: #fff;
+    color: #434c5e;
+    background-color: #d8dee9;
 }
 
 .highlight {
-    background-color: #2e3440;
+    background-color: #434c5e;
     border-radius: 5px;
     margin-top: 40px;
     margin-bottom: 40px
 }
 
+#main_content_wrap {
+    background: #eceff4;
+}
+
+#header_wrap {
+    background: #434c5e;
+}
