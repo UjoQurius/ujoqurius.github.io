@@ -4,14 +4,27 @@
 @import "{{ site.theme }}";
 
 body {
-    font-size: 20px;
+    font-size: 18px;
+    font-family:-apple-system,BlinkMacSystemFont,"Roboto","Segoe UI","Helvetica Neue","Lucida Grande",Arial,sans-serif;
 }
 
 .inner {
-    max-width: 750px;
+    max-width: 900px;
 }
 
 p img {
     display: block;
     margin: auto;
+    max-width: 900px;
 }
+
+code {
+    font-family: Monaco,Consolas,"Lucida Console",monospace;
+    color: #eff;
+    background-color: #263238;
+}
+
+.highlight {
+    background-color: #263238;
+}
+

