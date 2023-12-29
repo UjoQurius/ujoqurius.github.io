@@ -1,4 +1,4 @@
-[Home](/) \| [Writeups](/writeups/)
+[Home](/) | [Writeups](/writeups/)
 
 # Vulnlab: Retro
 
