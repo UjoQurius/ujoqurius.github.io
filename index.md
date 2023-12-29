@@ -1,7 +1,6 @@
+[Writeups](writeups/) | [HTB](https://app.hackthebox.com/profile/223060) | [LinkedIn](https://www.linkedin.com/in/patrik-pis/)| [Github](https://github.com/qur1us)
+
 ![](./assets/curious_fox_bw.png)
-
-[Writeups](writeups/) | [HTB](https://app.hackthebox.com/profile/223060) | [LinkedIn](https://www.linkedin.com/in/patrik-pis/)
-
 ## About me
 
 Hi, it's *qurius* and to briefly introduce myself I must say that I am just curious about how things work and love to dig deep when I don't understand. I am studying master's program on *Information Security* and have been dealing with security and hacking for about 4 years. I am [OSCP](https://www.offsec.com/courses/pen-200/) and [CRTP](https://www.alteredsecurity.com/adlab) certified and while I am studying I work as a freelance penetration tester and do some research work at the university.
