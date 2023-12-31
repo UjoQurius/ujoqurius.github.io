@@ -20,8 +20,6 @@ I hope you enjoy this write up, let's get into it!
 8. [Getting root](#getting-root)
 9. [Final thoughts](#final-thoughts)
 
-<br>
-
 ## Nmap
 
 As with every machine, let's start with an Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
