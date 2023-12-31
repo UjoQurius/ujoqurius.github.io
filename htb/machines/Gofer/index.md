@@ -8,15 +8,15 @@
 2\. [Nmap](#nmap)<br>
 3\. [SMB](#smb)<br>
 4\. [HTTP](#http)<br>
-&emsp;4\.1 [Fuzzing](#fuzzing)<br>
+4\.1&emsp; [Fuzzing](#fuzzing)<br>
 5\. [proxy.gofer.htb](#proxy.gofer.htb)<br>
-&emsp;5\.1 [HTTP verb tampering](#http-verb-tampering)<br>
+5\.1&emsp; [HTTP verb tampering](#http-verb-tampering)<br>
 6\. [Let's go phishing! (Part 1)](#let's-go-phishing!-(part-1))<br>
-&emsp;6\.1 [Gopher SSRF](#gopher-ssrf)<br>
+6\.1&emsp; [Gopher SSRF](#gopher-ssrf)<br>
 7\. [Let's go phishing! (Part 2)](#let's-go-phishing!-(part-2))<br>
-&emsp;7\.1 [Final exploit](#final-exploit)<br>
-&emsp;7\.2 [Step 1](#step-1)<br>
-&emsp;7\.3 [Steps 2 & 3](#steps-2-&-3)<br>
+7\.1&emsp; [Final exploit](#final-exploit)<br>
+7\.2&emsp; [Step 1](#step-1)<br>
+7\.3&emsp; [Steps 2 & 3](#steps-2-&-3)<br>
 
 ## Introduction
 
