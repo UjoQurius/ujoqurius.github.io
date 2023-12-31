@@ -1,21 +1,24 @@
 [Home](/) | [Writeups](/writeups/)
 
+# HTB: Gofer (Part 1)
+
 ## Table of Contents
 
-1\. [Nmap](#nmap)<br>
-2\. [SMB](#smb)<br>
-3\. [HTTP](#http)<br>
-&emsp;3\.1 [Fuzzing](#fuzzing)<br>
-4\. [proxy.gofer.htb](#proxy.gofer.htb)<br>
-&emsp;4\.1 [HTTP verb tampering](#http-verb-tampering)<br>
-5\. [Let's go phishing! (Part 1)](#let's-go-phishing!-(part-1))<br>
-&emsp;5\.1 [Gopher SSRF](#gopher-ssrf)<br>
-6\. [Let's go phishing! (Part 2)](#let's-go-phishing!-(part-2))<br>
-&emsp;6\.1 [Final exploit](#final-exploit)<br>
-&emsp;6\.2 [Step 1](#step-1)<br>
-&emsp;6\.3 [Steps 2 & 3](#steps-2-&-3)<br>
+1\. [Introduction](#introduction)<br>
+2\. [Nmap](#nmap)<br>
+3\. [SMB](#smb)<br>
+4\. [HTTP](#http)<br>
+&emsp;4\.1 [Fuzzing](#fuzzing)<br>
+5\. [proxy.gofer.htb](#proxy.gofer.htb)<br>
+&emsp;5\.1 [HTTP verb tampering](#http-verb-tampering)<br>
+6\. [Let's go phishing! (Part 1)](#let's-go-phishing!-(part-1))<br>
+&emsp;6\.1 [Gopher SSRF](#gopher-ssrf)<br>
+7\. [Let's go phishing! (Part 2)](#let's-go-phishing!-(part-2))<br>
+&emsp;7\.1 [Final exploit](#final-exploit)<br>
+&emsp;7\.2 [Step 1](#step-1)<br>
+&emsp;7\.3 [Steps 2 & 3](#steps-2-&-3)<br>
 
-# HTB: Gofer (Part 1)
+## Introduction
 
 Gofer is a hard difficulty Linux machine on [Hack The Box](https://.hackthebox.com) involving the exploitation of HTTP verb tampering and chaining SSRF with Gopher protocol to send a phishing e-mail and compromise the user with malicious LibreOffice document. This writeup is divided into 2 parts. First part contains the web exploitation part of the machine and phishing to get the user and the second part will contain binary exploitation for privilege escalation.
 
