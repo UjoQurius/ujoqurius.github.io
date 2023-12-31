@@ -1,18 +1,21 @@
 [Home](/) | [Writeups](/writeups/) 
 
+# Vulnlab: Forgotten
+
 ## Table of Contents
 
-1. [Nmap](#nmap)
-2. [Enumerating the web server](#enumerating-the-web-server)
-3. [Installing LimeSurvey](#installing-limesurvey)
-4. [Configuring MariaDB](#configuring-mariadb)
-5. [Uploading a malicious plugin](#uploading-a-malicious-plugin)
-6. [Getting user](#getting-user)
-7. [Enumeration as limesvc on host](#enumeration-as-limesvc-on-host)
-8. [Getting root](#getting-root)
-9. [Final thoughts](#final-thoughts)
+1\. [Introduction](#introduction)<br>
+2\. [Nmap](#nmap)<br>
+3\. [Enumerating the web server](#enumerating-the-web-server)<br>
+4\. [Installing LimeSurvey](#installing-limesurvey)<br>
+5\. [Configuring MariaDB](#configuring-mariadb)<br>
+6\. [Uploading a malicious plugin](#uploading-a-malicious-plugin)<br>
+7\. [Getting user](#getting-user)<br>
+8\. [Enumeration as limesvc on host](#enumeration-as-limesvc-on-host)<br>
+9\. [Getting root](#getting-root)<br>
+10\. [Final thoughts](#final-thoughts)<br>
 
-# Vulnlab: Forgotten
+## Introduction
 
 Forgotten is a easy (junior) level machine on [Vulnlab](https://www.vulnlab.com/) involving exploitation of a forgotten web installer of `LimeSurvey` survey application. The installation allowed to supply a remote database server instance and we could configure the web application to use our server as it's database. After successful installation, the `LimeSurvey` allowed us to upload a malicious PHP plugin and we were able to get Remote Code Execution landing in docker instance. This may seem like a bit far fetched scenario, however, as the machine's creator ([xct](https://twitter.com/xct_de)) pointed out, this is something that he encountered on a real life pentest. The box ends with a very nice way of leveraging root access to a docker instance and shared folder with the host for privilege escalation.
 
