@@ -1,3 +1,18 @@
+## Table of Contents
+
+1\. [Nmap](#nmap)
+2\. [SMB](#smb)
+3\. [HTTP](#http)
+	3\.1 [Fuzzing](#fuzzing)
+4\. [proxy.gofer.htb](#proxy.gofer.htb)
+	4\.1 [HTTP verb tampering](#http-verb-tampering)
+5\. [Let's go phishing! (Part 1)](#let's-go-phishing!-(part-1))
+	5\.1 [Gopher SSRF](#gopher-ssrf)
+6\. [Let's go phishing! (Part 2)](#let's-go-phishing!-(part-2))
+	6\.1 [Final exploit](#final-exploit)
+	6\.2 [Step 1](#step-1)
+	6\.3 [Steps 2 & 3](#steps-2-&-3)
+
 [Home](/) | [Writeups](/writeups/)
 
 # HTB: Gofer (Part 1)
