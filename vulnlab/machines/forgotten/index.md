@@ -1,6 +1,8 @@
 [Home](/) | [Writeups](/writeups/) 
 
-# Table of Contents
+# Vulnlab: Forgotten
+
+## Table of Contents
 
 1. [Nmap](#nmap)
 2. [Enumerating the web server](#enumerating-the-web-server)
@@ -12,7 +14,7 @@
 8. [Getting root](#getting-root)
 9. [Final thoughts](#final-thoughts)
 
-# Vulnlab: Forgotten
+<br>
 
 Forgotten is a easy (junior) level machine on [Vulnlab](https://www.vulnlab.com/) involving exploitation of a forgotten web installer of `LimeSurvey` survey application. The installation allowed to supply a remote database server instance and we could configure the web application to use our server as it's database. After successful installation, the `LimeSurvey` allowed us to upload a malicious PHP plugin and we were able to get Remote Code Execution landing in docker instance. This may seem like a bit far fetched scenario, however, as the machine's creator ([xct](https://twitter.com/xct_de)) pointed out, this is something that he encountered on a real life pentest. The box ends with a very nice way of leveraging root access to a docker instance and shared folder with the host for privilege escalation.
 
