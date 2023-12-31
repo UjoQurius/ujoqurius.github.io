@@ -2,7 +2,7 @@
 
 # Vulnlab: Forgotten
 
-## Table of Contents
+**Table of Contents**
 
 1\. [Introduction](#introduction)<br>
 2\. [Nmap](#nmap)<br>
