@@ -1,3 +1,5 @@
+[Home](/) | [Writeups](/writeups/)
+
 ## Table of Contents
 
 1\. [Nmap](#nmap)<br>
@@ -12,8 +14,6 @@
 &emsp;6\.1 [Final exploit](#final-exploit)<br>
 &emsp;6\.2 [Step 1](#step-1)<br>
 &emsp;6\.3 [Steps 2 & 3](#steps-2-&-3)<br>
-
-[Home](/) | [Writeups](/writeups/)
 
 # HTB: Gofer (Part 1)
 
