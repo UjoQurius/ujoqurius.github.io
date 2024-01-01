@@ -15,8 +15,8 @@
 &emsp;6\.1 [Gopher SSRF](#gopher-ssrf)<br>
 7\. [Let's go phishing! (Part 2)](#lets-go-phishing-part-2)<br>
 &emsp;7\.1 [Final exploit](#final-exploit)<br>
-&emsp;7\.2 [Step 1](#step-1)<br>
-&emsp;7\.3 [Steps 2 & 3](#steps-2--3)<br>
+&emsp;&emsp;7\.1\.1 [Step 1](#step-1)<br>
+&emsp;&emsp;7\.1\.2 [Steps 2 & 3](#steps-2--3)<br>
 
 ## Introduction
 
