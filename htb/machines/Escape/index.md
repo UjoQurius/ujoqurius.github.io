@@ -2,6 +2,28 @@
 
 # HTB: Escape
 
+**Table of Contents**
+
+1\. [Introduction](#introduction)<br>
+2\. [Reconnaissance & Enumeration](#reconnaissance--enumeration)<br>
+&emsp;2\.1 [Nmap](#nmap)<br>
+&emsp;2\.2 [LDAP](#ldap)<br>
+&emsp;2\.3 [SMB](#smb)<br>
+3\. [Capturing NTLMv2 hash](#capturing-ntlmv2-hash)<br>
+4\. [Shell as sql_svc](#shell-as-sqlsvc)<br>
+5\. [Privilege escalation - Shell as Ryan.Cooper](#privilege-escalation--shell-as-ryancooper)<br>
+&emsp;5\.1 [Post-Exploitation Enumeration](#postexploitation-enumeration)<br>
+&emsp;5\.2 [Enumerating certificates with Certify](#enumerating-certificates-with-certify)<br>
+&emsp;5\.3 [Abusing AD CS certificate template with Certify & Rubeus](#abusing-ad-cs-certificate-template-with-certify--rubeus)<br>
+&emsp;5\.4 [Step 1 - Request the Administrator certificate](#step-1--request-the-administrator-certificate)<br>
+&emsp;5\.5 [Step 2 - Transform the certificate from PEM to PFX format](#step-2--transform-the-certificate-from-pem-to-pfx-format)<br>
+&emsp;5\.6 [Step 3 - Request Administrator TGT](#step-3--request-administrator-tgt)<br>
+&emsp;5\.7 [Step 4 - Transform the Ticket From KIRBI to CCACHE format](#step-4--transform-the-ticket-from-kirbi-to-ccache-format)<br>
+&emsp;5\.8 [Step 5 Run psexec](#step-5-run-psexec)<br>
+6\. [Final thoughts](#final-thoughts)<br>
+
+## Introduction
+
 Hello, it's qurius! Welcome to my first blog post ever. Today we are taking a look at the `Escape` machine from [HackTheBox](https://www.hackthebox.com/). It was a medium difficulty machine which involved stealing of NTLM hashes and abusing AD CS certificate templates. This one was on the easier side of medium machines spectrum in my opinion (if you're familiar with Active Directory exploitation). Nonetheless, it was fun and I really enjoyed it, let's take a look.
 
 First let's start with the nmap.
