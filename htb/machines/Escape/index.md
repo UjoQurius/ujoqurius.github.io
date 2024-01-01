@@ -11,14 +11,14 @@
 &emsp;2\.3 [SMB](#smb)<br>
 3\. [Capturing NTLMv2 hash](#capturing-ntlmv2-hash)<br>
 4\. [Shell as sql_svc](#shell-as-sqlsvc)<br>
-5\. [Privilege escalation - Shell as Ryan.Cooper](#privilege-escalation--shell-as-ryancooper)<br>
-&emsp;5\.1 [Post-Exploitation Enumeration](#postexploitation-enumeration)<br>
+5\. [Privilege escalation - Shell as Ryan.Cooper](#privilege-escalation---shell-as-ryancooper)<br>
+&emsp;5\.1 [Post-Exploitation Enumeration](#post-exploitation-enumeration)<br>
 &emsp;5\.2 [Enumerating certificates with Certify](#enumerating-certificates-with-certify)<br>
 &emsp;5\.3 [Abusing AD CS certificate template with Certify & Rubeus](#abusing-ad-cs-certificate-template-with-certify--rubeus)<br>
-&emsp;&emsp;5\.3\.1 [Step 1 - Request the Administrator certificate](#step-1--request-the-administrator-certificate)<br>
-&emsp;&emsp;5\.3\.2 [Step 2 - Transform the certificate from PEM to PFX format](#step-2--transform-the-certificate-from-pem-to-pfx-format)<br>
-&emsp;&emsp;5\.3\.3 [Step 3 - Request Administrator TGT](#step-3--request-administrator-tgt)<br>
-&emsp;&emsp;5\.3\.4 [Step 4 - Transform the Ticket From KIRBI to CCACHE format](#step-4--transform-the-ticket-from-kirbi-to-ccache-format)<br>
+&emsp;&emsp;5\.3\.1 [Step 1 - Request the Administrator certificate](#step-1---request-the-administrator-certificate)<br>
+&emsp;&emsp;5\.3\.2 [Step 2 - Transform the certificate from PEM to PFX format](#step-2---transform-the-certificate-from-pem-to-pfx-format)<br>
+&emsp;&emsp;5\.3\.3 [Step 3 - Request Administrator TGT](#step-3---request-administrator-tgt)<br>
+&emsp;&emsp;5\.3\.4 [Step 4 - Transform the Ticket From KIRBI to CCACHE format](#step-4---transform-the-ticket-from-kirbi-to-ccache-format)<br>
 &emsp;&emsp;5\.3\.5 [Step 5 Run psexec](#step-5-run-psexec)<br>
 6\. [Final thoughts](#final-thoughts)<br>
 
