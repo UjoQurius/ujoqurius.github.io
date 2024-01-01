@@ -1,5 +1,7 @@
 [Home](/) | [Writeups](/writeups/) 
 
+18\. December 2023
+
 # Vulnlab: Forgotten
 
 **Table of Contents**
