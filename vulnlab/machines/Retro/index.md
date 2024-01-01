@@ -2,6 +2,27 @@
 
 # Vulnlab: Retro
 
+**Table of Contents**
+
+1\. [Introduction](#introduction)<br>
+2\. [Nmap](#nmap)<br>
+3\. [LDAP](#ldap)<br>
+4\. [SMB](#smb)<br>
+5\. [Authenticated enumeration with user trainee](#authenticated-enumeration-with-user-trainee)<br>
+&emsp;5\.1 [Failing to get shell](#failing-to-get-shell)<br>
+&emsp;5\.2 [Looking at SMB again](#looking-at-smb-again)<br>
+6\. [Pre-created computer account](#precreated-computer-account)<br>
+&emsp;6\.1 [Looking for pre-created computer account](#looking-for-precreated-computer-account)<br>
+&emsp;6\.2 [Changing the password](#changing-the-password)<br>
+7\. [AD CS](#ad-cs)<br>
+&emsp;7\.1 [Checking if AD CS is present](#checking-if-ad-cs-is-present)<br>
+&emsp;7\.2 [Looking for a vulnerable template](#looking-for-a-vulnerable-template)<br>
+&emsp;7\.3 [ESC1 ](#esc1-)<br>
+&emsp;7\.4 [Getting shell](#getting-shell)<br>
+8\. [Final thoughts](#final-thoughts)<br>
+
+## Introduction
+
 Retro is a easy machine on [Vulnlab](https://www.vulnlab.com/). It involves some password guessing, provides a interesting insight into pre-created domain computer accounts and how to abuse them and ends with a ESC1 Active Directory Certificate Services abuse.
 
 ![](https://1897091482-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FI3I73FFqB6GvT8N5Mt1N%2Fuploads%2FwPPiA9QkeYWlDNRWWT2l%2Fretro_slide.png?alt=media&token=7fa3c610-34d9-45ab-925c-b72880dc4420)
