@@ -2,6 +2,8 @@
 
 # HTB: Gofer (Part 1)
 
+<br>
+
 **Table of Contents**
 
 1\. [Introduction](#introduction)<br>
@@ -17,6 +19,8 @@
 &emsp;7\.1 [Final exploit](#final-exploit)<br>
 &emsp;&emsp;7\.1\.1 [Step 1](#step-1)<br>
 &emsp;&emsp;7\.1\.2 [Steps 2 & 3](#steps-2--3)<br>
+
+<br>
 
 ## Introduction
 
