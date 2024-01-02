@@ -8,16 +8,16 @@
 
 **Table of Contents**
 
-|1\. [Introduction](#introduction)|
-|2\. [Nmap](#nmap)|
-|3\. [Enumerating the web server](#enumerating-the-web-server)|
-|4\. [Installing LimeSurvey](#installing-limesurvey)|
-|5\. [Configuring MariaDB](#configuring-mariadb)|
-|6\. [Uploading a malicious plugin](#uploading-a-malicious-plugin)|
-|7\. [Getting user](#getting-user)|
-|8\. [Enumeration as limesvc on host](#enumeration-as-limesvc-on-host)|
-|9\. [Getting root](#getting-root)|
-|10\. [Final thoughts](#final-thoughts)|
+1\. [Introduction](#introduction)<br>
+2\. [Nmap](#nmap)<br>
+3\. [Enumerating the web server](#enumerating-the-web-server)<br>
+4\. [Installing LimeSurvey](#installing-limesurvey)<br>
+5\. [Configuring MariaDB](#configuring-mariadb)<br>
+6\. [Uploading a malicious plugin](#uploading-a-malicious-plugin)<br>
+7\. [Getting user](#getting-user)<br>
+8\. [Enumeration as limesvc on host](#enumeration-as-limesvc-on-host)<br>
+9\. [Getting root](#getting-root)<br>
+10\. [Final thoughts](#final-thoughts)<br>
 
 <br>
 
