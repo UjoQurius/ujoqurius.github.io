@@ -38,13 +38,13 @@ Hello everyone! After taking a short break for my uni exams I am back with a new
 
 I really enjoyed this box. In fact, I must say it's my favorite easy box on Vulnlab so far. I really appreciate that the steps we have to take are based on a real life engagement. Without further ado, let's take a look at it.
 
-![[lock-logo.png]]
+![](../../../lock-logo.png)
 
 ## Reconnaissance
 
 ### Nmap
 
-As with every machine, let's start with an `Nmap` scan. I use my own Rust wrapper which I created while I was first learning about Rust. You can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
+As with every machine, let's start with an Nmap scan. I use my own Rust wrapper which you can find [here](https://github.com/qur1us/rustmap). Let's look at the results.
 
 ```
 Nmap scan report for 10.10.71.234
