@@ -2,6 +2,14 @@
 
 # Writeups
 
+## [Vulnlab: Lock](../vulnlab/machines/lock/)
+
+**22\. January 2024**
+
+[Lock](../vulnlab/machines/lock/) is an easy machine starting with `Gitea` access tokens and some CI/CD exploitation for getting a foothold onto the box. For user we will have to decrypt `mRemoteNG` RDP configuration file to get a user's password and RDP into the machine. For root we will exploit a vulnerability in PDF24 that will allow us SYSTEM level access after setting opportunistic lock on a file the PDF24 repair process tries to write to.
+
+<br>
+
 ## [Vulnlab: Forgotten](../vulnlab/machines/forgotten/)
 
 **18\. December 2023**
