@@ -38,7 +38,7 @@ Hello everyone! After taking a short break for my uni exams I am back with a new
 
 I really enjoyed this box. In fact, I must say it's my favorite easy box on Vulnlab so far. I really appreciate that the steps we have to take are based on a real life engagement. Without further ado, let's take a look at it.
 
-![](../../../lock-logo.png)
+![](../../../assets/lock-logo.png)
 
 ## Reconnaissance
 
