@@ -4,7 +4,7 @@
 @import "{{ site.theme }}";
 
 body {
-    font-size: 18px;
+    font-size: 16px;
     font-family:-apple-system,BlinkMacSystemFont,"Roboto","Segoe UI","Helvetica Neue","Lucida Grande",Arial,sans-serif;
 }
 
@@ -43,4 +43,8 @@ code {
 
 #footer_wrap {
     background: #434c5e;
+}
+
+img {
+    max-width:100%
 }
